@@ -220,7 +220,7 @@
 </div>
 
 <script>
-// Statyczna baza unikalnych pytań pobranych ze zdjęć (ID 1-18)
+// Statyczna baza unikalnych pytań (ID 1-18)
 const staticDatabase = [
     {
         id: 1, type: "multi",
@@ -398,12 +398,12 @@ const staticDatabase = [
     },
     {
         id: 17, type: "multi",
-        text: "Rozważ całkę niewłaściwą pierwszego rodzaju ∫_{a}^{+∞} f(x) dx. Które zdania są prawdziwe?",
+        text: "Rozważ całkę niewłaściwą pierwszego rodzaju  całkę od a do nieskończoności f(x) dx. Które zdania są prawdziwe?",
         options: [
             { text: "Jeśli granica lim_{β ⟶ +∞} ∫_{a}^{β} f(x) dx istnieje i jest skończona, to całka jest zbieżna.", isCorrect: true },
-            { text: "Całka niewłaściwa ∫_{1}^{+∞} (1 / x^p) dx jest zbieżna dla p > 1.", isCorrect: true },
+            { text: "Całka niewłaściwa od 1 do nieskończoności (1 / x^p) dx jest zbieżna dla p > 1.", isCorrect: true },
             { text: "Każda całka niewłaściwa na przedziale nieograniczonym jest rozbieżna.", isCorrect: false },
-            { text: "Całka niewłaściwa ∫_{1}^{+∞} (1 / x) dx jest zbieżna.", isCorrect: false }
+            { text: "Całka niewłaściwa od 1 do nieskończoności (1 / x) dx jest zbieżna.", isCorrect: false }
         ]
     },
     {
@@ -418,7 +418,7 @@ const staticDatabase = [
     }
 ];
 
-// POTĘŻNA BAZA WŁASNOŚCI (W PIZDU TEGO JEST) - PODZIELONA NA PRAWDZIWE I FAŁSZYWE DLA KONTROLI LOSOWANIA
+// BAZA WŁASNOŚCI (PODZIELONA NA PRAWDZIWE I FAŁSZYWE)
 const megaPoolTrue = [
     { text: "Dziedziną funkcji f(x) = arcsin x jest przedział [-1, 1], a jej zbiorem wartości jest [-π/2, π/2].", isCorrect: true },
     { text: "Dziedziną funkcji f(x) = arccos x jest przedział [-1, 1], a jej zbiorem wartości jest [0, π].", isCorrect: true },
@@ -457,12 +457,11 @@ const megaPoolFalse = [
     { text: "Całka nieoznaczona ∫ e^x dx = e^{x+1} + C.", isCorrect: false }
 ];
 
-// DYNAMICZNY GENERATOR PEWNIAKA 1: Losuje dokładnie 5 opcji z olbrzymiej puli własności
+// DYNAMICZNY GENERATOR: Losuje dokładnie 5 opcji z olbrzymiej puli własności
 function generateFormulasPewniak() {
     let trues = shuffle([...megaPoolTrue]);
     let falses = shuffle([...megaPoolFalse]);
     
-    // Pobieramy 3 prawdziwe i 2 fałszywe, żeby struktura zadania zawsze była idealnie zbalansowana
     let selectedOptions = [trues[0], trues[1], trues[2], falses[0], falses[1]];
     
     return {
@@ -473,7 +472,7 @@ function generateFormulasPewniak() {
     };
 }
 
-// PEWNIAK 2: Dynamiczny generator pytania o granicę Pułkownika (z przesunięciem plus/minus)
+// Dynamiczny generator pytania o granicę
 function generateDynamicLimitQuestion() {
     const signs = [
         { lSign: '+', mSign: '+', ansStr: "5/3" },
@@ -524,7 +523,7 @@ function shuffle(array) {
 }
 
 function formatMathSymbols(text) {
-    return text.replace(/(lim a_n|lim \|a_n\||f : A ⟶ R|f⁻¹\(U\)|U ⊂ R|lim_{x ⟶ x_0}|f\(x\) = f\(x_0\)|\|a_n\| ≤ b_n|∑ b_n|∑ a_n|b_n =.*?n|lim b_n = \S+|g'\(x\) ≠ 0|lim f\/g = lim f'\/g'|lim_{x ⟶ a⁺}|f'\(x\)\/g'\(x\) = K|f\(x\)\/g\(x\) = K|x\^α|α ∈ R|\(x\^α\)'|x\^{α-1}|x⁰ = 1|\(x⁰\)' = 0|\(x¹\)'|a_n ⟶ 0|a_n ⇏ 0|∫ \(ln x \/ x\) dx|t = ln x|1\/2\(ln x\)\² \+ C|y = φ\(x\)|∫ f\(φ\(x\)\)φ'\(x\) dx = ∫ f\(y\) dy|F\(φ\(x\)\)|x > 0|y, z ∈ R|x\^y < x\^z|0 < x < 1|x\^y > x\^z|Rⁿ|ρ₁, ρ₂, ρ_∞|βρ₁\(x, y\) ≤ ρ₂\(x, y\) ≤ αρ₁\(x, y\)|a > 1|f\(x\) = a\^x|a\^x = 1|f'\(x\) ≥ 0|f'\(x\) < 0|f'\(x\) = 0|f'\(x\) > 0|a_n ≤ a_{n\+1}|a_n < a_{n\+1}|lim \(a_{n\+1} \/ a_n\)|f\(x\) = \w+|\[-1, 1\]|\[-π\/2, π\/2\]|\[0, π\]|\(-\u03c0\/2, \u03c0\/2\)|1\/\(1\+x\u00b2\)|x\u00b2|x_0 ∈ \w+|A'/g, '<span class="math-expr">$1</span>');
+    return text.replace(/(lim a_n|lim \|a_n\||f : A ⟶ R|f⁻¹\(U\)|U ⊂ R|lim_\{x ⟶ x_0\}|f\(x\) = f\(x_0\)|\|a_n\| ≤ b_n|∑ b_n|∑ a_n|b_n =.*?n|lim b_n = \S+|g'\(x\) ≠ 0|lim f\/g = lim f'\/g'|lim_\{x ⟶ a⁺\}|f'\(x\)\/g'\(x\) = K|f\(x\)\/g\(x\) = K|x\^α|α ∈ R|\(x\^α\)'|x\^\{α-1\}|x⁰ = 1|\(x⁰\)' = 0|\(x¹\)'|a_n ⟶ 0|a_n ⇏ 0|∫ \(ln x \/ x\) dx|t = ln x|1\/2\(ln x\)² \+ C|y = φ\(x\)|∫ f\(φ\(x\)\)φ'\(x\) dx = ∫ f\(y\) dy|F\(φ\(x\)\)|x > 0|y, z ∈ R|x\^y < x\^z|0 < x < 1|x\^y > x\^z|Rⁿ|ρ₁, ρ₂, ρ_∞|βρ₁\(x, y\) ≤ ρ₂\(x, y\) ≤ αρ₁\(x, y\)|a > 1|f\(x\) = a\^x|a\^x = 1|f'\(x\) ≥ 0|f'\(x\) < 0|f'\(x\) = 0|f'\(x\) > 0|a_n ≤ a_\{n\+1\}|a_n < a_\{n\+1\}|lim \(a_\{n\+1\} \/ a_n\)|f\(x\) = \w+|\[-1, 1\]|\[-π\/2, π\/2\]|\[0, π\]|\(-π\/2, π\/2\)|1\/\(1\+x²\)|x²|x_0 ∈ \w+|A')/g, '<span class="math-expr">$1</span>');
 }
 
 function startQuiz(mode) {
@@ -537,7 +536,6 @@ function startQuiz(mode) {
         document.getElementById('subtitle').innerText = "Tryb ćwiczeniowy - bez limitu czasu";
         document.getElementById('timer-container').style.display = 'none';
         
-        // Dynamicznie generujemy warianty pewniaków na ten bieg testu
         shuffledQuestions = [...staticDatabase, generateFormulasPewniak(), generateDynamicLimitQuestion()];
         shuffle(shuffledQuestions);
     } else if (mode === 'colonel') {
@@ -547,8 +545,8 @@ function startQuiz(mode) {
         
         let pool = shuffle([...staticDatabase]);
         let selected = pool.slice(0, 7); 
-        selected.push(generateFormulasPewniak()); // Pewniak z losowymi 5 własnościami
-        selected.push(generateDynamicLimitQuestion()); // Pewniak z losową granicą
+        selected.push(generateFormulasPewniak()); 
+        selected.push(generateDynamicLimitQuestion()); 
         
         shuffledQuestions = shuffle(selected); 
         
