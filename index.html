@@ -284,7 +284,7 @@ const staticDatabase = [
             { text: "(x^α)' = α x^α dla x > 0.", isCorrect: false },
             { text: "Jeśli α ≠ 1, to (x^α)' = x^{α-1}.", isCorrect: false },
             { text: "Dla α = 0 mamy x⁰ = 1, więc (x⁰)' = 0.", isCorrect: true },
-            { text: "Wzór (x^α)' = α x^{α-1} jest poprawny dla dowolnych x ∈ R i dowolnych α ∈ R.", isCorrect: false },
+            { text: "Wzór (x^α)' = α x^{α-1} is poprawny dla dowolnych x ∈ R i dowolnych α ∈ R.", isCorrect: false },
             { text: "Dla α = 1 mamy (x¹)' = (x)' = 1.", isCorrect: true }
         ]
     },
@@ -414,6 +414,66 @@ const staticDatabase = [
             { text: "Zbiór punktów skupienia zbioru A oznacza się symbolem A'.", isCorrect: true },
             { text: "Punkt x_0 jest punktem skupienia zbioru A wtedy i tylko wtedy, gdy istnieje ciąg (x_n) punktów zbioru A, x_n ≠ x_0, zbieżny do x_0.", isCorrect: true },
             { text: "Skończony podzbiór przestrzeni metrycznej nie ma punktów skupienia.", isCorrect: true }
+        ]
+    },
+    {
+        id: 19, type: "multi",
+        text: "Niech f : U ⟶ R, gdzie U ⊂ R² jest zbiorem otwartym. Które zdania dotyczące pochodnych cząstkowych i różniczkowalności są prawdziwe?",
+        options: [
+            { text: "Jeśli pochodne cząstkowe istnieją i są ciągłe w punkcie (x_0, y_0), to f jest różniczkowalna w tym punkcie.", isCorrect: true },
+            { text: "Z istnienia samych pochodnych cząstkowych w punkcie wynika automatycznie ciągłość funkcji w tym punkcie.", isCorrect: false },
+            { text: "Jeśli f jest różniczkowalna w (x_0, y_0), to jest w tym punkcie ciągła.", isCorrect: true },
+            { text: "Pochodne cząstkowe drugiego rzędu f''_{xy} i f''_{yx} są zawsze równe, niezależnie od ich ciągłości.", isCorrect: false }
+        ]
+    },
+    {
+        id: 20, type: "multi",
+        text: "Rozważ definicję i własności zbieżności jednostajnej ciągów funkcyjnych (f_n) na zbiorze X. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeśli ciąg funkcji ciągłych f_n zmierza jednostajnie do f, to f jest funkcją ciągłą.", isCorrect: true },
+            { text: "Zbieżność punktowa pociąga za sobą zbieżność jednostajną na każdym zbiorze.", isCorrect: false },
+            { text: "Ciąg f_n zbiega jednostajnie do f, gdy lim_{n ⟶ ∞} sup_{x ∈ X} |f_n(x) - f(x)| = 0.", isCorrect: true },
+            { text: "Jeśli szereg funkcyjny jest jednostajnie zbieżny, to jego wyraz ogólny nie musi dążyć do zera.", isCorrect: false }
+        ]
+    },
+    {
+        id: 21, type: "multi",
+        text: "Które zdania poprawnie opisują pojęcie wnętrza (Int A) oraz domknięcia (Cl A) zbioru w przestrzeni metrycznej?",
+        options: [
+            { text: "Wnętrze zbioru A to największy zbiór otwarty zawarty w A.", isCorrect: true },
+            { text: "Punkt x należy do domknięcia zbioru A wtedy i tylko wtedy, gdy jego odległość od zbioru A wynosi zero: dist(x, A) = 0.", isCorrect: true },
+            { text: "Dla dowolnego zbioru zachodzi Int A = Cl A.", isCorrect: false },
+            { text: "Zbiór A jest domknięty wtedy i tylko wtedy, gdy A = Cl A.", isCorrect: true }
+        ]
+    },
+    {
+        id: 22, type: "multi",
+        text: "Rozważ kryterium całkowe zbieżności szeregów liczbowych o wyrazach dodatnich. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeżeli f(x) jest ciągła, dodatnia i malejąca na [1, +∞), to szereg ∑ f(n) jest zbieżny ⟺ całka niewłaściwa ∫_{1}^{+∞} f(x) dx jest zbieżna.", isCorrect: true },
+            { text: "Kryterium całkowe można stosować dla funkcji rosnących.", isCorrect: false },
+            { text: "Wartość całki niewłaściwej jest zawsze dokładnie równa sumie szeregu.", isCorrect: false },
+            { text: "Pozwala zbadać zbieżność m.in. szeregu harmonicznego rzędu p.", isCorrect: true }
+        ]
+    },
+    {
+        id: 23, type: "multi",
+        text: "Niech f : U ⟶ R będzie funkcją dwukrotnie różniczkowalną na otwartym zbiorze U ⊂ R². Niech (x_0, y_0) będzie punktem stacjonarnym (df/dx = 0 i df/dy = 0). Oznaczmy wyróżnik (hesjan) jako W. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeśli W > 0 oraz d²f/dx² > 0 w (x_0, y_0), to f osiąga w tym punkcie minimum lokalne właściwe.", isCorrect: true },
+            { text: "Jeśli W < 0, to f nie ma w punkcie (x_0, y_0) ekstremum lokalnego (mamy punkt siodłowy).", isCorrect: true },
+            { text: "Jeśli W = 0, to badanie na podstawie pochodnych drugiego rzędu nie rozstrzyga o istnieniu ekstremum.", isCorrect: true },
+            { text: "Jeśli W > 0 oraz d²f/dx² < 0 w (x_0, y_0), to f osiąga w tym punkcie minimum lokalne.", isCorrect: false }
+        ]
+    },
+    {
+        id: 24, type: "multi",
+        text: "Rozważ definicje zbieżności bezwzględnej i warunkowej szeregów liczbowych ∑ a_n. Które zdania są prawdziwe?",
+        options: [
+            { text: "Szereg ∑ a_n nazywamy zbieżnym bezwzględnie, jeżeli szereg absolutnych wartości ∑ |a_n| jest zbieżny.", isCorrect: true },
+            { text: "Szereg zbieżny bezwzględnie jest zawsze zbieżny.", isCorrect: true },
+            { text: "Szereg nazywamy zbieżnym warunkowo, jeśli jest zbieżny, ale nie jest zbieżny bezwzględnie.", isCorrect: true },
+            { text: "Zbieżność bezwzględna zależy od kolejności sumowania wyrazów szeregu.", isCorrect: false }
         ]
     }
 ];
