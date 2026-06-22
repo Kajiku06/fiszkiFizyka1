@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egzamin: Matematyka 2</title>
+    <title>Egzaminator: Matematyka 2</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -24,16 +24,59 @@
             text-align: center;
             color: #1a2a3a;
             font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
             margin-bottom: 25px;
-            border-bottom: 2px solid #f1f2f6;
+            font-size: 1em;
+        }
+        .menu-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .mode-btn {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 15px auto;
+            padding: 20px;
+            font-size: 1.15em;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .btn-full { background: #475569; }
+        .btn-full:hover { background: #334155; }
+        .btn-colonel { background: #dc2626; }
+        .btn-colonel:hover { background: #b91c1c; }
+        
+        .status-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
             padding-bottom: 15px;
+            border-bottom: 2px solid #f1f2f6;
         }
         .progress-bar {
             font-size: 0.95em;
             color: #7f8c8d;
-            margin-bottom: 20px;
-            text-align: right;
             font-weight: 500;
+        }
+        .timer {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #fecaca;
         }
         .question-card {
             background: #fdfdfd;
@@ -67,6 +110,7 @@
             border-radius: 4px;
             color: #0f172a;
             font-weight: bold;
+            display: inline-block;
         }
         .options-list {
             list-style: none;
@@ -111,40 +155,33 @@
             transition: background 0.2s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        .btn-check {
-            background: #10b981;
-        }
-        .btn-check:hover {
-            background: #059669;
-        }
-        .btn-next {
-            background: #3b82f6 !important;
-        }
-        .btn-next:hover {
-            background: #2563eb !important;
-        }
-        .correct {
-            background: #ecfdf5 !important;
-            border-color: #a7f3d0 !important;
-            color: #065f46;
-        }
-        .incorrect {
-            background: #fef2f2 !important;
-            border-color: #fecaca !important;
-            color: #991b1b;
-        }
-        .missing {
-            border: 2px dashed #f59e0b !important;
-            background: #fffbeb !important;
-            color: #92400e;
-        }
+        .btn-check { background: #10b981; }
+        .btn-check:hover { background: #059669; }
+        .btn-next { background: #3b82f6; }
+        .btn-next:hover { background: #2563eb; }
+        
+        .correct { background: #ecfdf5 !important; border-color: #a7f3d0 !important; color: #065f46; }
+        .incorrect { background: #fef2f2 !important; border-color: #fecaca !important; color: #991b1b; }
+        .missing { border: 2px dashed #f59e0b !important; background: #fffbeb !important; color: #92400e; }
+        
         .score-summary {
             text-align: center;
-            font-size: 1.4em;
+            font-size: 1.3em;
             font-weight: bold;
             color: #1e293b;
             padding: 20px 0;
         }
+        .result-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .passed { background: #d1fae5; color: #065f46; border: 2px solid #10b981; }
+        .failed { background: #fee2e2; color: #991b1b; border: 2px solid #ef4444; }
+        
         .btn-restart {
             display: inline-block;
             margin-top: 25px;
@@ -158,26 +195,35 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .btn-restart:hover {
-            background: #334155;
-        }
+        .btn-restart:hover { background: #334155; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Egzamin Teoretyczny: Matematyka 2</h1>
-    <div id="progress" class="progress-bar"></div>
-    <div id="quiz-area"></div>
+    <h1 id="main-title">Egzamin: Matematyka 2</h1>
+    <div id="subtitle" class="subtitle">Wybierz tryb nauki</div>
     
-    <button id="btn-action" class="action-btn btn-check" onclick="handleAction()">Sprawdź odpowiedź</button>
+    <div id="status-panel" class="status-panel" style="display: none;">
+        <div id="progress" class="progress-bar"></div>
+        <div id="timer-container" class="timer" style="display: none;">Pozostało: <span id="time-left">20:00</span></div>
+    </div>
+
+    <div id="quiz-area">
+        <div class="menu-screen">
+            <button class="mode-btn btn-full" onclick="startQuiz('full')">1. Pełna baza pytań (Trening)</button>
+            <button class="mode-btn btn-colonel" onclick="startQuiz('colonel')">2. Test pana pułkownika (20 min, 9 zadań)</button>
+        </div>
+    </div>
+    
+    <button id="btn-action" class="action-btn btn-check" style="display: none;" onclick="handleAction()">Sprawdź odpowiedź</button>
 </div>
 
 <script>
-const database = [
+// Statyczna baza unikalnych pytań pobranych ze zdjęć (ID 1-18)
+const staticDatabase = [
     {
-        id: 1,
-        type: "multi",
+        id: 1, type: "multi",
         text: "Rozważ związek granicy ciągu z wartością bezwzględną. Które zdania są prawdziwe?",
         options: [
             { text: "lim a_n = 0 ⟹ lim |a_n| = 0", isCorrect: true },
@@ -188,8 +234,7 @@ const database = [
         ]
     },
     {
-        id: 2,
-        type: "multi",
+        id: 2, type: "multi",
         text: "Niech f : A ⟶ R. Które zdania o topologicznej charakteryzacji ciągłości są prawdziwe?",
         options: [
             { text: "Otwartość f⁻¹(U) rozpatruje się w topologii podprzestrzeni A.", isCorrect: true },
@@ -200,8 +245,7 @@ const database = [
         ]
     },
     {
-        id: 3,
-        type: "multi",
+        id: 3, type: "multi",
         text: "Rozważ kryterium porównawcze bezwzględne. Które zdania są prawdziwe?",
         options: [
             { text: "Jest równoważne kryterium Leibniza.", isCorrect: false },
@@ -212,8 +256,7 @@ const database = [
         ]
     },
     {
-        id: 4,
-        type: "multi",
+        id: 4, type: "multi",
         text: "Które zdania o iloczynie Cauchy'ego są prawdziwe?",
         options: [
             { text: "Jeśli oba szeregi są zbieżne, a przynajmniej jeden jest bezwzględnie zbieżny, to ich iloczyn Cauchy'ego jest zbieżny.", isCorrect: true },
@@ -224,19 +267,7 @@ const database = [
         ]
     },
     {
-        id: 5,
-        type: "single",
-        text: "Rozważ ciąg (b_n): b_n = (√(n²+15)-n) / (√(n²+3)-n). Wybierz poprawną odpowiedź:",
-        options: [
-            { text: "lim b_n = 3", isCorrect: false },
-            { text: "lim b_n = √3", isCorrect: false },
-            { text: "Ciąg jest rozbieżny", isCorrect: false },
-            { text: "lim b_n = 5/3 (Błąd w oryginalnym teście - wynik poprawny matematycznie to 5)", isCorrect: true }
-        ]
-    },
-    {
-        id: 6,
-        type: "multi",
+        id: 5, type: "multi",
         text: "Zakładamy, że f, g są różniczkowalne w (a, b), g'(x) ≠ 0 w (a, b). Które zdania o regule de l'Hôpitala dla postaci 0/0 są prawdziwe?",
         options: [
             { text: "Regułę de l'Hôpitala wolno stosować bez sprawdzania różniczkowalności i warunku g'(x) ≠ 0.", isCorrect: false },
@@ -247,8 +278,7 @@ const database = [
         ]
     },
     {
-        id: 7,
-        type: "multi",
+        id: 6, type: "multi",
         text: "Dla x > 0 i α ∈ R rozważ x^α. Które zdania są prawdziwe?",
         options: [
             { text: "(x^α)' = α x^α dla x > 0.", isCorrect: false },
@@ -259,8 +289,7 @@ const database = [
         ]
     },
     {
-        id: 8,
-        type: "multi",
+        id: 7, type: "multi",
         text: "Które zdania dotyczące warunku koniecznego zbieżności szeregu są prawdziwe?",
         options: [
             { text: "Warunek konieczny zbieżności szeregu jest jednocześnie warunkiem wystarczającym.", isCorrect: false },
@@ -271,8 +300,7 @@ const database = [
         ]
     },
     {
-        id: 9,
-        type: "multi",
+        id: 8, type: "multi",
         text: "Niech F będzie funkcją pierwotną f na (a, b), a φ : (α, β) ⟶ (a, b) funkcją różniczkowalną. Które zdania o podstawieniu są prawdziwe?",
         options: [
             { text: "∫ (ln x / x) dx = ln x + C dla x > 0.", isCorrect: false },
@@ -283,8 +311,7 @@ const database = [
         ]
     },
     {
-        id: 10,
-        type: "multi",
+        id: 9, type: "multi",
         text: "Niech x > 0 oraz y, z ∈ R. Które zdania są prawdziwe?",
         options: [
             { text: "Jeżeli x > 1 i y < z to x^y < x^z.", isCorrect: true },
@@ -295,8 +322,7 @@ const database = [
         ]
     },
     {
-        id: 11,
-        type: "multi",
+        id: 10, type: "multi",
         text: "Które zdania o równoważności metryk w Rⁿ są prawdziwe?",
         options: [
             { text: "W Rⁿ metryki ρ₁, ρ₂, ρ_∞ są równoważne.", isCorrect: true },
@@ -307,8 +333,7 @@ const database = [
         ]
     },
     {
-        id: 12,
-        type: "multi",
+        id: 11, type: "multi",
         text: "Niech a > 1. Dana jest funkcja wykładnicza f(x) = a^x. Które zdania są prawdziwe?",
         options: [
             { text: "Równanie a^x = 1 ma dokładnie jedno rozwiązanie.", isCorrect: true },
@@ -319,8 +344,7 @@ const database = [
         ]
     },
     {
-        id: 13,
-        type: "multi",
+        id: 12, type: "multi",
         text: "Niech f : (a, b) ⟶ R będzie różniczkowalna w (a, b). Które zdania o monotoniczności są prawdziwe?",
         options: [
             { text: "Jeżeli f'(x) ≥ 0 dla wszystkich x, to f jest ściśle rosnąca.", isCorrect: false },
@@ -331,8 +355,7 @@ const database = [
         ]
     },
     {
-        id: 14,
-        type: "multi",
+        id: 13, type: "multi",
         text: "Które zdania poprawnie opisują monotoniczność ciągu (a_n)?",
         options: [
             { text: "Ciąg niemalejący spełnia a_n ≤ a_{n+1}.", isCorrect: true },
@@ -343,8 +366,7 @@ const database = [
         ]
     },
     {
-        id: 15,
-        type: "multi",
+        id: 14, type: "multi",
         text: "Rozważ kryterium d'Alemberta (ilorazowe) dla szeregu o wyrazach dodatnich. Które zdania są prawdziwe?",
         options: [
             { text: "Jeśli lim (a_{n+1} / a_n) < 1, to szereg jest zbieżny.", isCorrect: true },
@@ -353,13 +375,145 @@ const database = [
             { text: "Kryterium d'Alemberta można stosować bezpośrednio do szeregów o wyrazach dowolnych bez modułu.", isCorrect: false },
             { text: "Kryterium opiera się na porównaniu szeregu z szeregiem geometrycznym.", isCorrect: true }
         ]
+    },
+    {
+        id: 15, type: "multi",
+        text: "Niech f : (a, b) ⟶ R. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeśli f jest różniczkowalna w x_0 ∈ (a, b), to f jest ciągła w x_0.", isCorrect: true },
+            { text: "Z ciągłości f w x_0 ∈ (a, b) wynika jej różniczkowalność w x_0.", isCorrect: false },
+            { text: "Funkcja f(x) = |x| jest ciągła w x_0 = 0, ale nie jest różniczkowalna w x_0 = 0.", isCorrect: true },
+            { text: "Ciągłość i różniczkowalność są pojęciami równoważnymi dla dowolnych funkcji.", isCorrect: false }
+        ]
+    },
+    {
+        id: 16, type: "multi",
+        text: "Które zdania dotyczące ośrodkowości przestrzeni metrycznych są prawdziwe?",
+        options: [
+            { text: "Każda przestrzeń metryczna dyskretna jest ośrodkowa.", isCorrect: false },
+            { text: "Przestrzeń metryczna jest ośrodkowa, jeśli zawiera podzbiór przeliczalny i gęsty.", isCorrect: true },
+            { text: "Przestrzeń R z metryką euklidesową jest ośrodkowa, ponieważ zbiór Q jest przeliczalny i gęsty.", isCorrect: true },
+            { text: "Każda podprzestrzeń przestrzeni ośrodkowej musi być skończona.", isCorrect: false }
+        ]
+    },
+    {
+        id: 17, type: "multi",
+        text: "Rozważ całkę niewłaściwą pierwszego rodzaju ∫_{a}^{+∞} f(x) dx. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeśli granica lim_{β ⟶ +∞} ∫_{a}^{β} f(x) dx istnieje i jest skończona, to całka jest zbieżna.", isCorrect: true },
+            { text: "Całka niewłaściwa ∫_{1}^{+∞} (1 / x^p) dx jest zbieżna dla p > 1.", isCorrect: true },
+            { text: "Każda całka niewłaściwa na przedziale nieograniczonym jest rozbieżna.", isCorrect: false },
+            { text: "Całka niewłaściwa ∫_{1}^{+∞} (1 / x) dx jest zbieżna.", isCorrect: false }
+        ]
+    },
+    {
+        id: 18, type: "multi",
+        text: "Niech A będzie podzbiorem przestrzeni metrycznej X. Punkt x_0 ∈ X nazywamy punktem skupienia zbioru A, jeżeli w każdym otoczeniu punktu x_0 znajduje się co najmniej jeden punkt zbioru A różny od x_0. Które zdania są prawdziwe?",
+        options: [
+            { text: "Punkt skupienia zbioru A musi należeć do zbioru A.", isCorrect: false },
+            { text: "Zbiór punktów skupienia zbioru A oznacza się symbolem A'.", isCorrect: true },
+            { text: "Punkt x_0 jest punktem skupienia zbioru A wtedy i tylko wtedy, gdy istnieje ciąg (x_n) punktów zbioru A, x_n ≠ x_0, zbieżny do x_0.", isCorrect: true },
+            { text: "Skończony podzbiór przestrzeni metrycznej nie ma punktów skupienia.", isCorrect: true }
+        ]
     }
 ];
 
+// POTĘŻNA BAZA WŁASNOŚCI (W PIZDU TEGO JEST) - PODZIELONA NA PRAWDZIWE I FAŁSZYWE DLA KONTROLI LOSOWANIA
+const megaPoolTrue = [
+    { text: "Dziedziną funkcji f(x) = arcsin x jest przedział [-1, 1], a jej zbiorem wartości jest [-π/2, π/2].", isCorrect: true },
+    { text: "Dziedziną funkcji f(x) = arccos x jest przedział [-1, 1], a jej zbiorem wartości jest [0, π].", isCorrect: true },
+    { text: "Dziedziną funkcji f(x) = arctan x jest cała przestrzeń R, a jej zbiorem wartości jest otwarty przedział (-π/2, π/2).", isCorrect: true },
+    { text: "Dziedziną funkcji f(x) = arccot x jest cała przestrzeń R, a jej zbiorem wartości jest otwarty przedział (0, π).", isCorrect: true },
+    { text: "Całka nieoznaczona z funkcji 1/(1+x²) wynosi ∫ (1 / (1+x²)) dx = arctan x + C.", isCorrect: true },
+    { text: "Pochodna funkcji f(x) = ln x wynosi f'(x) = 1/x przy założeniu x > 0.", isCorrect: true },
+    { text: "Pochodna funkcji f(x) = arcsin x wynosi f'(x) = 1 / √(1 - x²) dla każdego x ∈ (-1, 1).", isCorrect: true },
+    { text: "Pochodna funkcji f(x) = arccos x wynosi f'(x) = -1 / √(1 - x²) dla każdego x ∈ (-1, 1).", isCorrect: true },
+    { text: "Pochodna funkcji f(x) = arctan x wynosi f'(x) = 1 / (1 + x²) dla całego x ∈ R.", isCorrect: true },
+    { text: "Całka nieoznaczona ∫ (1 / √(1 - x²)) dx = arcsin x + C dla x ∈ (-1, 1).", isCorrect: true },
+    { text: "Zachodzi tożsamość arcsin x + arccos x = π/2 dla każdego x ∈ [-1, 1].", isCorrect: true },
+    { text: "Zachodzi tożsamość arctan x + arccot x = π/2 dla każdego x ∈ R.", isCorrect: true },
+    { text: "Funkcja f(x) = arctan x jest ściśle rosnąca w całej swojej dziedzinie R.", isCorrect: true },
+    { text: "Funkcja f(x) = arcsin x jest nieparzysta, co oznacza, że arcsin(-x) = -arcsin x.", isCorrect: true },
+    { text: "Całka nieoznaczona ∫ (1/x) dx = ln|x| + C dla każdego x ≠ 0.", isCorrect: true },
+    { text: "Pochodna funkcji f(x) = e^x jest równa e^x w całej dziedzinie.", isCorrect: true },
+    { text: "Funkcja f(x) = arccos x jest ściśle malejąca w przedziale [-1, 1].", isCorrect: true }
+];
+
+const megaPoolFalse = [
+    { text: "Zbiorem wartości funkcji arcsin x jest przedział [0, π].", isCorrect: false },
+    { text: "Dziedziną funkcji arctan x jest wyłącznie przedział [-1, 1].", isCorrect: false },
+    { text: "Pochodna funkcji f(x) = cos x wynosi sin x.", isCorrect: false },
+    { text: "Całka nieoznaczona z funkcji 1/(1+x²) wynosi ∫ (1 / (1+x²)) dx = arcsin x + C.", isCorrect: false },
+    { text: "Dziedziną funkcji f(x) = arccos x jest przedział [0, π].", isCorrect: false },
+    { text: "Zbiorem wartości funkcji arctan x jest domknięty przedział [-π/2, π/2].", isCorrect: false },
+    { text: "Pochodna funkcji f(x) = arctan x wynosi f'(x) = 1 / √(1 + x²).", isCorrect: false },
+    { text: "Całka nieoznaczona ∫ sin x dx = cos x + C.", isCorrect: false },
+    { text: "Pochodna funkcji f(x) = arcsin x wynosi 1 / (1 - x²).", isCorrect: false },
+    { text: "Dziedziną funkcji f(x) = ln x jest cała przestrzeń R.", isCorrect: false },
+    { text: "Funkcja arctan x posiada asymptoty pionowe w punktach x = π/2 oraz x = -π/2.", isCorrect: false },
+    { text: "Zachodzi tożsamość arccos(-x) = -arccos x dla wszystkich x ∈ [-1, 1].", isCorrect: false },
+    { text: "Zbiorem wartości funkcji arccot x jest przedział (-π/2, π/2).", isCorrect: false },
+    { text: "Pochodna funkcji f(x) = ctg x wynosi 1 / sin² x.", isCorrect: false },
+    { text: "Całka nieoznaczona ∫ e^x dx = e^{x+1} + C.", isCorrect: false }
+];
+
+// DYNAMICZNY GENERATOR PEWNIAKA 1: Losuje dokładnie 5 opcji z olbrzymiej puli własności
+function generateFormulasPewniak() {
+    let trues = shuffle([...megaPoolTrue]);
+    let falses = shuffle([...megaPoolFalse]);
+    
+    // Pobieramy 3 prawdziwe i 2 fałszywe, żeby struktura zadania zawsze była idealnie zbalansowana
+    let selectedOptions = [trues[0], trues[1], trues[2], falses[0], falses[1]];
+    
+    return {
+        id: 100,
+        type: "multi",
+        text: "Wybierz zdania zawierające PRAWIDŁOWE stwierdzenia dotyczące podstawowych pochodnych, całek oraz funkcji cyklometrycznych (wraz z ich dziedzinami i zbiorami wartości):",
+        options: shuffle(selectedOptions)
+    };
+}
+
+// PEWNIAK 2: Dynamiczny generator pytania o granicę Pułkownika (z przesunięciem plus/minus)
+function generateDynamicLimitQuestion() {
+    const signs = [
+        { lSign: '+', mSign: '+', ansStr: "5/3" },
+        { lSign: '-', mSign: '+', ansStr: "-5/3" },
+        { lSign: '+', mSign: '-', ansStr: "-5/3" },
+        { lSign: '-', mSign: '-', ansStr: "5/3" }
+    ];
+    const chosen = signs[Math.floor(Math.random() * signs.length)];
+    
+    const pool = ["3", "√3", "Ciąg jest rozbieżny", "5", "5/2", "-5", "0"];
+    const filteredPool = pool.filter(item => item !== chosen.ansStr);
+    
+    for (let i = filteredPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filteredPool[i], filteredPool[j]] = [filteredPool[j], filteredPool[i]];
+    }
+
+    const options = [
+        { text: `lim b_n = ${chosen.ansStr} (Zniekształcony wynik systemowy)`, isCorrect: true },
+        { text: `lim b_n = ${filteredPool[0]}`, isCorrect: false },
+        { text: `lim b_n = ${filteredPool[1]}`, isCorrect: false },
+        { text: `lim b_n = ${filteredPool[2]}`, isCorrect: false }
+    ];
+
+    return {
+        id: 200,
+        type: "single",
+        text: `Rozważ ciąg (b_n): b_n = (√(n² ${chosen.lSign} 15) - n) / (√(n² ${chosen.mSign} 3) - n). Wybierz poprawną odpowiedź zgodną z kluczem systemu:`,
+        options: options
+    };
+}
+
+let activeQuizMode = ""; 
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
-let userScore = 0;
+let totalPossiblePoints = 0;
+let userTotalPoints = 0;
 let isCheckedState = false;
+let timerInterval = null;
+let timeLeftSeconds = 1200; 
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -369,17 +523,64 @@ function shuffle(array) {
     return array;
 }
 
-// Funkcja formatująca symbole matematyczne w locie dla lepszej czytelności wizualnej
 function formatMathSymbols(text) {
-    return text.replace(/(lim a_n|lim \|a_n\||f : A ⟶ R|f⁻¹\(U\)|U ⊂ R|lim_{x ⟶ x_0}|f\(x\) = f\(x_0\)|\|a_n\| ≤ b_n|∑ b_n|∑ a_n|b_n =.*?n|lim b_n = \d\/\d|lim b_n = \d|lim b_n = √\d|g'\(x\) ≠ 0|lim f\/g = lim f'\/g'|lim_{x ⟶ a⁺}|f'\(x\)\/g'\(x\) = K|f\(x\)\/g\(x\) = K|x\^α|α ∈ R|\(x\^α\)'|x\^{α-1}|x⁰ = 1|\(x⁰\)' = 0|\(x¹\)'|a_n ⟶ 0|a_n ⇏ 0|∫ \(ln x \/ x\) dx|t = ln x|1\/2\(ln x\)\² \+ C|y = φ\(x\)|∫ f\(φ\(x\)\)φ'\(x\) dx = ∫ f\(y\) dy|F\(φ\(x\)\)|x > 0|y, z ∈ R|x\^y < x\^z|0 < x < 1|x\^y > x\^z|Rⁿ|ρ₁, ρ₂, ρ_∞|βρ₁\(x, y\) ≤ ρ₂\(x, y\) ≤ αρ₁\(x, y\)|a > 1|f\(x\) = a\^x|a\^x = 1|f'\(x\) ≥ 0|f'\(x\) < 0|f'\(x\) = 0|f'\(x\) > 0|a_n ≤ a_{n\+1}|a_n < a_{n\+1}|lim \(a_{n\+1} \/ a_n\))/g, '<span class="math-expr">$1</span>');
+    return text.replace(/(lim a_n|lim \|a_n\||f : A ⟶ R|f⁻¹\(U\)|U ⊂ R|lim_{x ⟶ x_0}|f\(x\) = f\(x_0\)|\|a_n\| ≤ b_n|∑ b_n|∑ a_n|b_n =.*?n|lim b_n = \S+|g'\(x\) ≠ 0|lim f\/g = lim f'\/g'|lim_{x ⟶ a⁺}|f'\(x\)\/g'\(x\) = K|f\(x\)\/g\(x\) = K|x\^α|α ∈ R|\(x\^α\)'|x\^{α-1}|x⁰ = 1|\(x⁰\)' = 0|\(x¹\)'|a_n ⟶ 0|a_n ⇏ 0|∫ \(ln x \/ x\) dx|t = ln x|1\/2\(ln x\)\² \+ C|y = φ\(x\)|∫ f\(φ\(x\)\)φ'\(x\) dx = ∫ f\(y\) dy|F\(φ\(x\)\)|x > 0|y, z ∈ R|x\^y < x\^z|0 < x < 1|x\^y > x\^z|Rⁿ|ρ₁, ρ₂, ρ_∞|βρ₁\(x, y\) ≤ ρ₂\(x, y\) ≤ αρ₁\(x, y\)|a > 1|f\(x\) = a\^x|a\^x = 1|f'\(x\) ≥ 0|f'\(x\) < 0|f'\(x\) = 0|f'\(x\) > 0|a_n ≤ a_{n\+1}|a_n < a_{n\+1}|lim \(a_{n\+1} \/ a_n\)|f\(x\) = \w+|\[-1, 1\]|\[-π\/2, π\/2\]|\[0, π\]|\(-\u03c0\/2, \u03c0\/2\)|1\/\(1\+x\u00b2\)|x\u00b2|x_0 ∈ \w+|A'/g, '<span class="math-expr">$1</span>');
 }
 
-function startQuiz() {
-    shuffledQuestions = shuffle([...database]);
+function startQuiz(mode) {
+    activeQuizMode = mode;
+    document.getElementById('status-panel').style.display = 'flex';
+    document.getElementById('btn-action').style.display = 'block';
+    
+    if (mode === 'full') {
+        document.getElementById('main-title').innerText = "Pełna baza pytań";
+        document.getElementById('subtitle').innerText = "Tryb ćwiczeniowy - bez limitu czasu";
+        document.getElementById('timer-container').style.display = 'none';
+        
+        // Dynamicznie generujemy warianty pewniaków na ten bieg testu
+        shuffledQuestions = [...staticDatabase, generateFormulasPewniak(), generateDynamicLimitQuestion()];
+        shuffle(shuffledQuestions);
+    } else if (mode === 'colonel') {
+        document.getElementById('main-title').innerText = "Test Pana Pułkownika";
+        document.getElementById('subtitle').innerText = "Wymagane minimum: 40% do zdania";
+        document.getElementById('timer-container').style.display = 'block';
+        
+        let pool = shuffle([...staticDatabase]);
+        let selected = pool.slice(0, 7); 
+        selected.push(generateFormulasPewniak()); // Pewniak z losowymi 5 własnościami
+        selected.push(generateDynamicLimitQuestion()); // Pewniak z losową granicą
+        
+        shuffledQuestions = shuffle(selected); 
+        
+        timeLeftSeconds = 1200; 
+        startTimer();
+    }
+    
     currentQuestionIndex = 0;
-    userScore = 0;
-    isCheckedState = false;
+    userTotalPoints = 0;
+    totalPossiblePoints = shuffledQuestions.length; 
     showQuestion();
+}
+
+function startTimer() {
+    if(timerInterval) clearInterval(timerInterval);
+    
+    function updateTimerDisplay() {
+        let minutes = Math.floor(timeLeftSeconds / 60);
+        let seconds = timeLeftSeconds % 60;
+        document.getElementById('time-left').innerText = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeftSeconds <= 0) {
+            clearInterval(timerInterval);
+            alert("Czas minął! System automatycznie kończy Twój egzamin.");
+            showFinalResult();
+        }
+        timeLeftSeconds--;
+    }
+    
+    updateTimerDisplay();
+    timerInterval = setInterval(updateTimerDisplay, 1000);
 }
 
 function showQuestion() {
@@ -412,9 +613,7 @@ function showQuestion() {
     const optionsList = document.createElement('ul');
     optionsList.className = 'options-list';
 
-    const shuffledOptions = shuffle([...q.options]);
-
-    shuffledOptions.forEach(opt => {
+    q.options.forEach(opt => {
         const li = document.createElement('li');
         li.className = 'option-item';
 
@@ -459,14 +658,27 @@ function handleAction() {
 function checkCurrentAnswer() {
     const card = document.querySelector('.question-card');
     const inputs = card.querySelectorAll('input');
-    let isPerfect = true;
+    
     let anyChecked = false;
-
     inputs.forEach(i => { if(i.checked) anyChecked = true; });
     if(!anyChecked) {
-        alert("Zaznacz co najmniej jedną odpowiedź przed sprawdzeniem!");
+        alert("Zaznacz co najmniej jedną odpowiedź!");
         return;
     }
+
+    let anyIncorrectChecked = false;
+    let correctCheckedCount = 0;
+    let totalCorrectCount = 0;
+
+    inputs.forEach(input => {
+        const isCorrectAnswer = input.dataset.correct === 'true';
+        const isChecked = input.checked;
+
+        if (isCorrectAnswer) totalCorrectCount++;
+
+        if (isChecked && !isCorrectAnswer) anyIncorrectChecked = true;
+        if (isChecked && isCorrectAnswer) correctCheckedCount++;
+    });
 
     inputs.forEach(input => {
         const item = input.closest('.option-item');
@@ -479,16 +691,21 @@ function checkCurrentAnswer() {
             item.classList.add('correct');
         } else if (isChecked && !isCorrectAnswer) {
             item.classList.add('incorrect');
-            isPerfect = false;
         } else if (!isChecked && isCorrectAnswer) {
             item.classList.add('missing');
-            isPerfect = false;
         }
     });
 
-    if (isPerfect) {
-        userScore++;
+    let pointsEarned = 0;
+    if (anyIncorrectChecked) {
+        pointsEarned = 0; 
+    } else {
+        if (totalCorrectCount > 0) {
+            pointsEarned = correctCheckedCount / totalCorrectCount;
+        }
     }
+
+    userTotalPoints += pointsEarned;
 
     isCheckedState = true;
     const btn = document.getElementById('btn-action');
@@ -506,22 +723,37 @@ function nextQuestion() {
 }
 
 function showFinalResult() {
-    document.getElementById('progress').innerText = "";
+    if(timerInterval) clearInterval(timerInterval);
+    
+    document.getElementById('status-panel').style.display = 'none';
     const quizArea = document.getElementById('quiz-area');
     const btn = document.getElementById('btn-action');
     btn.style.display = 'none';
 
+    let finalPoints = Math.round(userTotalPoints * 100) / 100;
+    let percentage = Math.round((finalPoints / totalPossiblePoints) * 100);
+    
+    let passStatusHTML = "";
+    if (activeQuizMode === 'colonel') {
+        if (percentage >= 40) {
+            passStatusHTML = `<br><span class="result-badge passed">ZALICZONY (Zdano od 40%)</span>`;
+        } else {
+            passStatusHTML = `<br><span class="result-badge failed">NIEZALICZONY (Wymagane minimum 40%)</span>`;
+        }
+    }
+
     quizArea.innerHTML = `
         <div class="score-summary">
-            Test zakończony!<br><br>
-            Twój końcowy wynik:<br>
-            <span style="font-size: 1.4em; color: #2563eb;">${userScore} / ${shuffledQuestions.length} (${Math.round((userScore/shuffledQuestions.length)*100)}%)</span><br>
-            <button class="btn-restart" onclick="location.reload()">Podejdź jeszcze raz</button>
+            Koniec testu!<br><br>
+            Uzyskane punkty:<br>
+            <span style="font-size: 1.6em; color: #2563eb;">${finalPoints} / ${totalPossiblePoints} p.</span><br>
+            Procentowy wynik: <span style="font-weight:bold;">${percentage}%</span>
+            ${passStatusHTML}
+            <br>
+            <button class="btn-restart" onclick="location.reload()">Powrót do wyboru trybu</button>
         </div>
     `;
 }
-
-window.onload = startQuiz;
 </script>
 
 </body>
