@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egzamin Krok po Kroku - Matematyka 2</title>
+    <title>Egzamin Krok po Kroku - Pełna Baza 15 Pytan</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -107,7 +107,6 @@
         .btn-next:hover {
             background: #2980b9;
         }
-        /* Style sprawdzania wyników */
         .correct {
             background: #d4edda !important;
             border-color: #c3e6cb !important;
@@ -143,7 +142,7 @@
 <body>
 
 <div class="container">
-    <h1>Egzamin: Matematyka 2 (Tryb Krok po Kroku)</h1>
+    <h1>Egzamin: Matematyka 2 (Pełna Baza 15 Pytań)</h1>
     <div id="progress" class="progress-bar"></div>
     <div id="quiz-area"></div>
     
@@ -151,7 +150,6 @@
 </div>
 
 <script>
-// Pełna baza 12 unikalnych pytań 1 do 1 z Twoich plików
 const database = [
     {
         id: 1,
@@ -209,7 +207,7 @@ const database = [
             { text: "lim b_n = 3", isCorrect: false },
             { text: "lim b_n = √3", isCorrect: false },
             { text: "Ciąg jest rozbieżny", isCorrect: false },
-            { text: "lim b_n = 5/3 (Błąd w oryginalnym teście - matematyczny wynik to 5)", isCorrect: true }
+            { text: "lim b_n = 5/3 (Uwaga: Błąd w oryginalnym teście WAT - matematyczny wynik to 5)", isCorrect: true }
         ]
     },
     {
@@ -295,13 +293,49 @@ const database = [
             { text: "Funkcja jest różnowartościowa.", isCorrect: true },
             { text: "Funkcja jest malejąca.", isCorrect: false }
         ]
+    },
+    {
+        id: 13,
+        type: "multi",
+        text: "Niech f : (a, b) ⟶ R będzie różniczkowalna w (a, b). Które zdania o monotoniczności są prawdziwe?",
+        options: [
+            { text: "Jeżeli f'(x) ≥ 0 dla wszystkich x, to f jest ściśle rosnąca.", isCorrect: false },
+            { text: "Jeżeli f'(x) < 0 dla wszystkich x ∈ (a, b), to f jest ściśle malejąca w (a, b).", isCorrect: true },
+            { text: "Jeżeli f'(x) = 0 dla wszystkich x ∈ (a, b), to f jest stała na (a, b).", isCorrect: true },
+            { text: "Jeżeli f jest rosnąca na (a, b), to f'(x) > 0 dla każdego x ∈ (a, b).", isCorrect: false },
+            { text: "Jeżeli f'(x) > 0 dla wszystkich x ∈ (a, b), to f jest ściśle rosnąca w (a, b).", isCorrect: true }
+        ]
+    },
+    {
+        id: 14,
+        type: "multi",
+        text: "Które zdania poprawnie opisują monotoniczność ciągu (a_n)?",
+        options: [
+            { text: "Ciąg niemalejący spełnia a_n ≤ a_{n+1}.", isCorrect: true },
+            { text: "Ciąg malejący spełnia a_n ≤ a_{n+1}.", isCorrect: false },
+            { text: "Ciąg nierosnący spełnia a_n < a_{n+1}.", isCorrect: false },
+            { text: "Ciąg rosnący spełnia a_n < a_{n+1}.", isCorrect: true },
+            { text: "Ciąg rosnący może mieć a_n = a_{n+1} dla pewnego n.", isCorrect: false }
+        ]
+    },
+    {
+        id: 15,
+        type: "multi",
+        text: "Rozważ kryterium d'Alemberta (ilorazowe) dla szeregu o wyrazach dodatnich. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeśli lim (a_{n+1} / a_n) < 1, to szereg jest zbieżny.", isCorrect: true },
+            { text: "Jeśli lim (a_{n+1} / a_n) > 1, to szereg jest rozbieżny.", isCorrect: true },
+            { text: "Jeśli lim (a_{n+1} / a_n) = 1, to kryterium nie rozstrzyga o zbieżności.", isCorrect: true },
+            { text: "Kryterium d'Alemberta można stosować bezpośrednio do szeregów o wyrazach dowolnych bez modułu.", isCorrect: false },
+            { text: "Kryterium opiera się na porównaniu szeregu z szeregiem geometrycznym.", isCorrect: true }
+        ]
     }
 ];
 
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
 let userScore = 0;
-let isCheckedState = false; // true - pokazujemy wyniki, false - czekamy na zaznaczenie
+let isCheckedState = false;
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -349,7 +383,6 @@ function showQuestion() {
     const optionsList = document.createElement('ul');
     optionsList.className = 'options-list';
 
-    // Losowanie kolejności odpowiedzi
     const shuffledOptions = shuffle([...q.options]);
 
     shuffledOptions.forEach(opt => {
@@ -410,7 +443,7 @@ function checkCurrentAnswer() {
         const isCorrectAnswer = input.dataset.correct === 'true';
         const isChecked = input.checked;
 
-        input.disabled = true; // Blokujemy możliwość zmiany po sprawdzeniu
+        input.disabled = true;
 
         if (isChecked && isCorrectAnswer) {
             item.classList.add('correct');
