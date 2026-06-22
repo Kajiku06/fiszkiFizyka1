@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egzamin Teoretyczny - Matematyka 2</title>
+    <title>Egzamin Krok po Kroku - Matematyka 2</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,7 +15,7 @@
         }
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 40px auto;
             background: #fff;
             padding: 30px;
             border-radius: 8px;
@@ -27,6 +27,13 @@
             margin-bottom: 30px;
             border-bottom: 2px solid #ecf0f1;
             padding-bottom: 15px;
+            font-size: 1.6em;
+        }
+        .progress-bar {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            text-align: right;
         }
         .question-card {
             background: #fafbfc;
@@ -34,11 +41,10 @@
             border-radius: 6px;
             padding: 20px;
             margin-bottom: 25px;
-            transition: all 0.3s ease;
         }
         .question-text {
             font-weight: 600;
-            font-size: 1.1em;
+            font-size: 1.15em;
             color: #2c3e50;
             margin-bottom: 15px;
         }
@@ -60,7 +66,7 @@
         .option-item {
             display: flex;
             align-items: flex-start;
-            padding: 10px 12px;
+            padding: 12px;
             margin-bottom: 8px;
             background: #fff;
             border: 1px solid #d1d8e0;
@@ -76,11 +82,10 @@
             margin-top: 4px;
             transform: scale(1.2);
         }
-        .btn-submit {
+        .action-btn {
             display: block;
             width: 100%;
             padding: 15px;
-            background: #2ed573;
             color: white;
             border: none;
             border-radius: 6px;
@@ -88,10 +93,19 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.2s;
-            margin-top: 20px;
         }
-        .btn-submit:hover {
+        .btn-check {
+            background: #2ed573;
+        }
+        .btn-check:hover {
             background: #26af5f;
+        }
+        .btn-next {
+            background: #3498db;
+            display: none;
+        }
+        .btn-next:hover {
+            background: #2980b9;
         }
         /* Style sprawdzania wyników */
         .correct {
@@ -108,24 +122,32 @@
             border: 2px dashed #ffc107 !important;
             background: #fff3cd !important;
         }
-        .result-box {
-            display: none;
+        .score-summary {
             text-align: center;
-            font-size: 1.3em;
+            font-size: 1.4em;
             font-weight: bold;
-            margin-top: 25px;
-            padding: 15px;
-            border-radius: 6px;
+            color: #2c3e50;
+        }
+        .btn-restart {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Egzamin: Matematyka 2 (Teoria)</h1>
-    <div id="quiz-container"></div>
-    <button class="btn-submit" onclick="checkAnswers()">Sprawdź odpowiedzi</button>
-    <div id="result" class="result-box"></div>
+    <h1>Egzamin: Matematyka 2 (Tryb Krok po Kroku)</h1>
+    <div id="progress" class="progress-bar"></div>
+    <div id="quiz-area"></div>
+    
+    <button id="btn-action" class="action-btn btn-check" onclick="handleAction()">Sprawdź odpowiedź</button>
 </div>
 
 <script>
@@ -276,7 +298,11 @@ const database = [
     }
 ];
 
-// Funkcja mieszająca (Fisher-Yates Shuffle)
+let shuffledQuestions = [];
+let currentQuestionIndex = 0;
+let userScore = 0;
+let isCheckedState = false; // true - pokazujemy wyniki, false - czekamy na zaznaczenie
+
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -285,119 +311,154 @@ function shuffle(array) {
     return array;
 }
 
-// Renderowanie testu
-function initQuiz() {
-    const container = document.getElementById('quiz-container');
-    container.innerHTML = '';
-    
-    // Losowanie kolejności pytań
-    const shuffledData = shuffle([...database]);
-
-    shuffledData.forEach((q, qIndex) => {
-        const card = document.createElement('div');
-        card.className = 'question-card';
-        card.dataset.id = q.id;
-        card.dataset.type = q.type;
-
-        const badge = document.createElement('div');
-        badge.className = 'type-badge';
-        badge.innerText = q.type === 'multi' ? 'WIELOKROTNY WYBÓR' : 'JEDNOKROTNY WYBÓR';
-        card.appendChild(badge);
-
-        const qText = document.createElement('div');
-        qText.className = 'question-text';
-        qText.innerText = `${qIndex + 1}. ${q.text}`;
-        card.appendChild(qText);
-
-        const optionsList = document.createElement('ul');
-        optionsList.className = 'options-list';
-
-        // Losowanie kolejności odpowiedzi
-        const shuffledOptions = shuffle([...q.options]);
-
-        shuffledOptions.forEach((opt, oIndex) => {
-            const li = document.createElement('li');
-            li.className = 'option-item';
-            
-            const input = document.createElement('input');
-            input.type = q.type === 'multi' ? 'checkbox' : 'radio';
-            input.name = `q-${q.id}`;
-            input.value = opt.text;
-            input.dataset.correct = opt.isCorrect;
-
-            const label = document.createElement('span');
-            label.innerText = opt.text;
-
-            li.appendChild(input);
-            li.appendChild(label);
-            
-            // Kliknięcie w dowolne miejsce na pasku zaznacza input
-            li.addEventListener('click', (e) => {
-                if(e.target !== input) {
-                    input.checked = !input.checked;
-                }
-            });
-
-            optionsList.appendChild(li);
-        });
-
-        card.appendChild(optionsList);
-        container.appendChild(card);
-    });
+function startQuiz() {
+    shuffledQuestions = shuffle([...database]);
+    currentQuestionIndex = 0;
+    userScore = 0;
+    isCheckedState = false;
+    showQuestion();
 }
 
-// Sprawdzanie odpowiedzi
-function checkAnswers() {
-    const cards = document.querySelectorAll('.question-card');
-    let totalQuestions = cards.length;
-    let correctQuestionsCount = 0;
+function showQuestion() {
+    isCheckedState = false;
+    const btn = document.getElementById('btn-action');
+    btn.innerText = "Sprawdź odpowiedź";
+    btn.className = "action-btn btn-check";
 
-    cards.forEach(card => {
-        const inputs = card.querySelectorAll('input');
-        let isQuestionPerfect = true;
+    const progress = document.getElementById('progress');
+    progress.innerText = `Pytanie ${currentQuestionIndex + 1} z ${shuffledQuestions.length}`;
 
-        inputs.forEach(input => {
-            const item = input.closest('.option-item');
-            const isCorrectAnswer = input.dataset.correct === 'true';
-            const isChecked = input.checked;
+    const quizArea = document.getElementById('quiz-area');
+    quizArea.innerHTML = '';
 
-            // Reset stylów
-            item.className = 'option-item';
+    const q = shuffledQuestions[currentQuestionIndex];
 
-            if (isChecked && isCorrectAnswer) {
-                item.classList.add('correct'); // Dobrze zaznaczone
-            } else if (isChecked && !isCorrectAnswer) {
-                item.classList.add('incorrect'); // Źle zaznaczone
-                isQuestionPerfect = false;
-            } else if (!isChecked && isCorrectAnswer) {
-                item.classList.add('missing'); // Powinno być zaznaczone, a nie jest
-                isQuestionPerfect = false;
+    const card = document.createElement('div');
+    card.className = 'question-card';
+
+    const badge = document.createElement('div');
+    badge.className = 'type-badge';
+    badge.innerText = q.type === 'multi' ? 'WIELOKROTNY WYBÓR' : 'JEDNOKROTNY WYBÓR';
+    card.appendChild(badge);
+
+    const qText = document.createElement('div');
+    qText.className = 'question-text';
+    qText.innerText = q.text;
+    card.appendChild(qText);
+
+    const optionsList = document.createElement('ul');
+    optionsList.className = 'options-list';
+
+    // Losowanie kolejności odpowiedzi
+    const shuffledOptions = shuffle([...q.options]);
+
+    shuffledOptions.forEach(opt => {
+        const li = document.createElement('li');
+        li.className = 'option-item';
+
+        const input = document.createElement('input');
+        input.type = q.type === 'multi' ? 'checkbox' : 'radio';
+        input.name = 'quiz-options';
+        input.value = opt.text;
+        input.dataset.correct = opt.isCorrect;
+
+        const label = document.createElement('span');
+        label.innerText = opt.text;
+
+        li.appendChild(input);
+        li.appendChild(label);
+
+        li.addEventListener('click', (e) => {
+            if (!isCheckedState && e.target !== input) {
+                if (input.type === 'radio') {
+                    const radios = card.querySelectorAll('input[type="radio"]');
+                    radios.forEach(r => r.checked = false);
+                }
+                input.checked = !input.checked;
             }
         });
 
-        if (isQuestionPerfect) {
-            correctQuestionsCount++;
+        optionsList.appendChild(li);
+    });
+
+    card.appendChild(optionsList);
+    quizArea.appendChild(card);
+}
+
+function handleAction() {
+    if (!isCheckedState) {
+        checkCurrentAnswer();
+    } else {
+        nextQuestion();
+    }
+}
+
+function checkCurrentAnswer() {
+    const card = document.querySelector('.question-card');
+    const inputs = card.querySelectorAll('input');
+    let isPerfect = true;
+    let anyChecked = false;
+
+    inputs.forEach(i => { if(i.checked) anyChecked = true; });
+    if(!anyChecked) {
+        alert("Zaznacz co najmniej jedną odpowiedź!");
+        return;
+    }
+
+    inputs.forEach(input => {
+        const item = input.closest('.option-item');
+        const isCorrectAnswer = input.dataset.correct === 'true';
+        const isChecked = input.checked;
+
+        input.disabled = true; // Blokujemy możliwość zmiany po sprawdzeniu
+
+        if (isChecked && isCorrectAnswer) {
+            item.classList.add('correct');
+        } else if (isChecked && !isCorrectAnswer) {
+            item.classList.add('incorrect');
+            isPerfect = false;
+        } else if (!isChecked && isCorrectAnswer) {
+            item.classList.add('missing');
+            isPerfect = false;
         }
     });
 
-    // Wyświetlenie wyniku ogólnego
-    const resultBox = document.getElementById('result');
-    resultBox.style.display = 'block';
-    resultBox.innerText = `Twój wynik: ${correctQuestionsCount} / ${totalQuestions} (${Math.round((correctQuestionsCount/totalQuestions)*100)}%)`;
-    
-    if(correctQuestionsCount === totalQuestions) {
-        resultBox.style.background = '#d4edda';
-        resultBox.style.color = '#155724';
-    } else {
-        resultBox.style.background = '#fff3cd';
-        resultBox.style.color = '#856404';
+    if (isPerfect) {
+        userScore++;
     }
-    
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+    isCheckedState = true;
+    const btn = document.getElementById('btn-action');
+    btn.innerText = "Następne pytanie";
+    btn.className = "action-btn btn-next";
 }
 
-// Uruchomienie przy załadowaniu strony
-window.onload = initQuiz;
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < shuffledQuestions.length) {
+        showQuestion();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    document.getElementById('progress').innerText = "";
+    const quizArea = document.getElementById('quiz-area');
+    const btn = document.getElementById('btn-action');
+    btn.style.display = 'none';
+
+    quizArea.innerHTML = `
+        <div class="score-summary">
+            Koniec testu!<br>
+            Twój ostateczny wynik to:<br>
+            <strong>${userScore} / ${shuffledQuestions.length} (${Math.round((userScore/shuffledQuestions.length)*100)}%)</strong><br>
+            <button class="btn-restart" onclick="location.reload()">Rozpocznij od nowa</button>
+        </div>
+    `;
+}
+
+window.onload = startQuiz;
 </script>
 
 </body>
