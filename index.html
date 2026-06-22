@@ -3,270 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fizyka fiszki</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>Egzamin Teoretyczny - Matematyka 2</title>
     <style>
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(-45deg, #ffffff, #eeeeee, #e8e8e8, #f7e9e9);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
             margin: 0;
-            overflow: hidden;
-            transition: background-color 0.3s;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .card {
-            min-height: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #edeff2;
-            border-radius: 15px;
-            margin: 20px 0;
             padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             background: #fff;
-            transition: transform 0.2s;
-        }
-
-        .shake {
-            animation: shake 0.4s;
-            border-color: #e74c3c !important;
-        }
-
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
-        }
-
-        .formula { font-size: 26px; color: #004085; display: none; margin-top: 15px; }
-        .question { font-size: 20px; font-weight: 600; color: #495057; }
-
-        button {
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
+            padding: 30px;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 15px;
+        }
+        .question-card {
+            background: #fafbfc;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .type-badge {
+            display: inline-block;
+            font-size: 0.75em;
+            padding: 3px 8px;
+            background: #e1f5fe;
+            color: #0288d1;
+            border-radius: 3px;
+            margin-bottom: 10px;
             font-weight: bold;
         }
-
-        .btn-main { background-color: #914da2; color: white; }
-        .btn-success { background-color: #28a745; color: white; display: none; }
-        .btn-danger { background-color: #dc3545; color: white; display: none; }
-
-        button:active { transform: scale(0.95); }
-
-        .explosion-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(220, 53, 69, 0.3);
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: #fff;
+            border: 1px solid #d1d8e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-item:hover {
+            background: #f1f2f6;
+        }
+        .option-item input {
+            margin-right: 12px;
+            margin-top: 4px;
+            transform: scale(1.2);
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #2ed573;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+        }
+        .btn-submit:hover {
+            background: #26af5f;
+        }
+        /* Style sprawdzania wyników */
+        .correct {
+            background: #d4edda !important;
+            border-color: #c3e6cb !important;
+            color: #155724;
+        }
+        .incorrect {
+            background: #f8d7da !important;
+            border-color: #f5c6cb !important;
+            color: #721c24;
+        }
+        .missing {
+            border: 2px dashed #ffc107 !important;
+            background: #fff3cd !important;
+        }
+        .result-box {
             display: none;
-            pointer-events: none;
-            z-index: 5;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
         }
     </style>
 </head>
 <body>
 
-<div id="explosion" class="explosion-overlay"></div>
-
 <div class="container">
-    <div id="start-screen">
-        <h1>Fizyka 1 kol. 1 wyklad</h1>
-        <p>wszelkie prawa zastrzezone!</p>
-        <button class="btn-main" onclick="startSession()">START</button>
-    </div>
-
-    <div id="study-screen" style="display:none;">
-        <div style="font-size: 12px; color: #6c757d;">Do zaliczenia: <span id="count">0</span></div>
-        <div id="flashcard" class="card">
-            <div id="question" class="question">Wczytywanie..</div>
-            <div id="formula-container" class="formula">
-                <span id="formula-text"></span>
-            </div>
-        </div>
-        <button id="show-btn" class="btn-main" onclick="showFormula()">Pokaż wzór</button>
-        <div id="action-btns">
-            <button id="know-btn" class="btn-success" onclick="handleAnswer(true)">Znam</button>
-            <button id="dont-know-btn" class="btn-danger" onclick="handleAnswer(false)">Nie znam</button>
-        </div>
-    </div>
-
-    <div id="end-screen" style="display:none;">
-        <h1>Udalo sie opanowac wszystko</h1>
-        <button class="btn-main" onclick="startSession()">Jeszcze raz</button>
-    </div>
+    <h1>Egzamin: Matematyka 2 (Teoria)</h1>
+    <div id="quiz-container"></div>
+    <button class="btn-submit" onclick="checkAnswers()">Sprawdź odpowiedzi</button>
+    <div id="result" class="result-box"></div>
 </div>
 
 <script>
-    const allData = [
-    // 1.wektory
-    {q: "Suma wektorowa", a: "\\vec{a} + \\vec{b} = (a_x + b_x, a_y + b_y, a_z + b_z)"},
-    {q: "Iloczyn skalarny (analitycznie)", a: "\\vec{a} \\cdot \\vec{b} = a_x b_x + a_y b_y + a_z b_z"},
-    {q: "Iloczyn skalarny (geometrycznie)", a: "\\vec{a} \\cdot \\vec{b} = a \\cdot b \\cdot \\cos \\alpha"},
-    {q: "Iloczyn wektorowy (macierzowo)", a: "\\vec{c} = \\vec{a} \\times \\vec{b} = \\begin{vmatrix} \\vec{i} & \\vec{j} & \\vec{k} \\\\ a_x & a_y & a_z \\\\ b_x & b_y & b_z \\\\end{vmatrix}"},
-    {q: "Wartość iloczynu wektorowego", a: "|\\vec{c}| = a \\cdot b \\cdot \\sin \\alpha"},
-
-    // 2. prędkość i 3. przyspieszenie
-    {q: "Prędkość liniowa (chwilowa)", a: "\\vec{v} = \\frac{d\\vec{s}}{dt}"},
-    {q: "Prędkość kątowa", a: "\\vec{\\omega} = \\frac{d\\vec{\\theta}}{dt}"},
-    {q: "Zależność prędkości liniowej od kątowej", a: "\\vec{v} = \\vec{\\omega} \\times \\vec{r}"},
-    {q: "Przyspieszenie liniowe", a: "\\vec{a} = \\frac{d\\vec{v}}{dt}"},
-    {q: "Przyspieszenie kątowe", a: "\\vec{\\epsilon} = \\frac{d\\vec{\\omega}}{dt}"},
-    {q: "Przyspieszenie w ruchu po okręgu (styczne i normalne)", a: "\\vec{a} = \\vec{\\epsilon} \\times \\vec{r} - \\omega^2 \\cdot \\vec{r} = \\vec{a}_t + \\vec{a}_n"},
-
-    // 4. ruch jednostajnie przyspieszony
-    {q: "Położenie w ruchu jednostajnie przyspieszonym (postępowym)", a: "x = x_0 + v_0 t + \\frac{1}{2}at^2"},
-    {q: "Położenie w ruchu jednostajnie przyspieszonym (obrotowym)", a: "\\theta = \\theta_0 + \\omega_0 t + \\frac{1}{2}\\epsilon t^2"},
-    {q: "Prędkość chwilowa w ruchu jednostajnie przyspieszonym (postępowym)", a: "v = v_0 + at"},
-    {q: "Prędkość chwilowa w ruchu jednostajnie przyspieszonym (obrotowym)", a: "\\omega = \\omega_0 + \\epsilon t"},
-
-    // 5-9. siły i Momenty
-    {q: "Siła dośrodkowa", a: "F_d = \\frac{mv^2}{r}"},
-    {q: "Moment bezwładności (całka)", a: "I = \\int r^2 dm"},
-    {q: "Twierdzenie Steinera", a: "I = I_c + md^2"},
-    {q: "Pęd ciała", a: "\\vec{p} = m \\cdot \\vec{v}"},
-    {q: "Moment pędu (postać I i II)", a: "\\vec{L} = I \\cdot \\vec{\\omega} \\text{ lub } \\vec{L} = \\vec{r} \\times \\vec{p}"},
-    {q: "Moment siły", a: "\\vec{M} = \\vec{r} \\times \\vec{F}"},
-
-    // 10. zd Newtona
-    {q: "II zasada dynamiki dla ruchu postępowego (ogólnie)", a: "\\vec{F}_w = \\frac{d\\vec{p}}{dt}"},
-    {q: "II zasada dynamiki dla ruchu obrotowego (ogólnie)", a: "\\vec{M}_w = \\frac{d\\vec{L}}{dt}"},
-
-    // 11-12. Energia i Moc
-    {q: "Praca mechaniczna (całka)", a: "W = \\int \\vec{F} \\cdot d\\vec{r}"},
-    {q: "Energia potencjalna ciężkości", a: "E_p = mgh"},
-    {q: "Energia kinetyczna ruchu postępowego", a: "E_k = \\frac{mv^2}{2}"},
-    {q: "Energia kinetyczna ruchu obrotowego", a: "E_k = \\frac{I\\omega^2}{2}"},
-    {q: "Moc chwilowa", a: "P = \\frac{dW}{dt}"},
-
-    // 13. Zasady zachowania
-    {q: "Zasada zachowania energii mechanicznej", a: "\\sum E = E_c = const"},
-    {q: "Zasada zachowania pędu", a: "\\sum \\vec{p} = \\vec{p}_c = const"},
-    {q: "Zasada zachowania momentu pędu", a: "\\sum \\vec{L} = \\vec{L}_c = const"},
-
-    // 14. Pole grawitacyjne
-    {q: "Siła wzajemnego przyciągania (Grawitacja)", a: "F = G \\frac{m_1 m_2}{r^2}"},
-    {q: "Natężenie pola grawitacyjnego", a: "\\vec{E} = \\frac{\\vec{F}}{m} = G \\frac{m}{r^2} \\text{ lub } \\vec{E} = -\\vec{grad} V"},
-    {q: "Energia potencjalna grawitacji", a: "E_p = -G \\frac{m_1 m_2}{r}"},
-    {q: "Potencjał grawitacyjny", a: "V = \\frac{E_p}{m} = -G \\frac{m}{r}"},
-
-    // 15. Prawa Keplera
-    {q: "II prawo Keplera (prędkość polowa)", a: "\\vec{v}_S = \\frac{d\\vec{S}}{dt}"},
-    {q: "III prawo Keplera", a: "\\frac{T_1^2}{T_2^2} = \\frac{a_1^3}{a_2^3} \\text{ lub } \\frac{a^3}{T^2} = const"},
-
-    // 16. Transformacja Lorentza
-    {q: "Transformacja Lorentza (położenie)", a: "x_2 = \\frac{x_1 - vt_1}{\\sqrt{1-\\beta^2}} \\text{ gdzie } \\beta = \\frac{v}{c}"},
-    {q: "Transformacja Lorentza (czas)", a: "t_2 = \\frac{t_1 - (\\frac{v}{c^2})x_1}{\\sqrt{1-\\beta^2}}"},
-    {q: "Skrócenie długości (Lorentz)", a: "l = l_0 \\sqrt{1-\\beta^2}"},
-    {q: "Dylatacja czasu", a: "t = \\frac{t_0}{\\sqrt{1-\\beta^2}}"},
-    {q: "Relatywistyczne zwiększenie masy", a: "m = \\frac{m_0}{\\sqrt{1-\\beta^2}}"},
-
-    // 17. Energia relatywistyczna
-    {q: "Energia całkowita relatywistyczna", a: "E = mc^2"},
-    {q: "Energia spoczynkowa", a: "E = m_0 c^2"},
-    {q: "Energia kinetyczna relatywistyczna", a: "E_k = mc^2 - m_0 c^2"}
+// Pełna baza 12 unikalnych pytań 1 do 1 z Twoich plików
+const database = [
+    {
+        id: 1,
+        type: "multi",
+        text: "Rozważ związek granicy ciągu z wartością bezwzględną. Które zdania są prawdziwe?",
+        options: [
+            { text: "lim a_n = 0 ⟹ lim |a_n| = 0", isCorrect: true },
+            { text: "lim |a_n| = 0 ⟺ a_n = 0 od pewnego miejsca", isCorrect: false },
+            { text: "lim a_n = 0 ⟺ lim |a_n| = 0", isCorrect: true },
+            { text: "Każdy ciąg ma granicę.", isCorrect: false },
+            { text: "lim |a_n| = 0 ⟺ lim a_n = 1", isCorrect: false }
+        ]
+    },
+    {
+        id: 2,
+        type: "multi",
+        text: "Niech f : A ⟶ R. Które zdania o topologicznej charakteryzacji ciągłości są prawdziwe?",
+        options: [
+            { text: "Otwartość f⁻¹(U) rozpatruje się w topologii podprzestrzeni A.", isCorrect: true },
+            { text: "f jest ciągła na A wtedy i tylko wtedy, gdy dla każdego zbioru otwartego U ⊂ R przeciwobraz f⁻¹(U) jest otwarty w A.", isCorrect: true },
+            { text: "Tylko funkcje różniczkowalne mogą być ciągłe.", isCorrect: false },
+            { text: "Z tego wynika, że przeciwobrazy zbiorów domkniętych nie mają związku z ciągłością.", isCorrect: false },
+            { text: "Funkcja jest ciągła jeżeli lim_{x ⟶ x_0} f(x) = f(x_0).", isCorrect: true }
+        ]
+    },
+    {
+        id: 3,
+        type: "multi",
+        text: "Rozważ kryterium porównawcze bezwzględne. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jest równoważne kryterium Leibniza.", isCorrect: false },
+            { text: "Jeśli |a_n| ≤ b_n i ∑ b_n jest zbieżny, to ∑ a_n jest bezwzględnie zbieżny.", isCorrect: true },
+            { text: "Jest stosowane do szeregów zmiennoznakowych (przez przejście do |a_n|).", isCorrect: true },
+            { text: "Może prowadzić do wniosku o zbieżności bezwzględnej.", isCorrect: true },
+            { text: "Wymaga monotoniczności a_n.", isCorrect: false }
+        ]
+    },
+    {
+        id: 4,
+        type: "multi",
+        text: "Które zdania o iloczynie Cauchy'ego są prawdziwe?",
+        options: [
+            { text: "Jeśli oba szeregi są zbieżne, a przynajmniej jeden jest bezwzględnie zbieżny, to ich iloczyn Cauchy'ego jest zbieżny.", isCorrect: true },
+            { text: "Iloczyn Cauchy'ego definiuje nowy szereg z dwóch danych szeregów.", isCorrect: true },
+            { text: "Iloczyn Cauchy'ego nie zależy od kolejności sumowania bez dodatkowych założeń.", isCorrect: false },
+            { text: "Iloczyn Cauchy'ego zawsze jest zbieżny.", isCorrect: false },
+            { text: "Iloczyn Cauchy'ego jest przemienny.", isCorrect: true }
+        ]
+    },
+    {
+        id: 5,
+        type: "single",
+        text: "Rozważ ciąg (b_n): b_n = (√(n²+15)-n) / (√(n²+3)-n). Wybierz poprawną odpowiedź:",
+        options: [
+            { text: "lim b_n = 3", isCorrect: false },
+            { text: "lim b_n = √3", isCorrect: false },
+            { text: "Ciąg jest rozbieżny", isCorrect: false },
+            { text: "lim b_n = 5/3 (Błąd w oryginalnym teście - matematyczny wynik to 5)", isCorrect: true }
+        ]
+    },
+    {
+        id: 6,
+        type: "multi",
+        text: "Zakładamy, że f, g są różniczkowalne w (a, b), g'(x) ≠ 0 w (a, b). Które zdania o regule de l'Hôpitala dla postaci 0/0 są prawdziwe?",
+        options: [
+            { text: "Regułę de l'Hôpitala wolno stosować bez sprawdzania różniczkowalności i warunku g'(x) ≠ 0.", isCorrect: false },
+            { text: "W tej sytuacji nie wolno bezpośrednio stosować twierdzenia o granicy ilorazu.", isCorrect: true },
+            { text: "Jeżeli mamy postać 0/0, to zawsze zachodzi lim f/g = lim f'/g'.", isCorrect: false },
+            { text: "Jeżeli istnieje granica lim_{x ⟶ a⁺} f'(x)/g'(x) = K (skończona lub nieskończona), to istnieje też lim_{x ⟶ a⁺} f(x)/g(x) = K.", isCorrect: true },
+            { text: "Jeżeli lim_{x ⟶ a⁺} f(x) = 0 i lim_{x ⟶ a⁺} g(x) = 0, to granica lim f/g ma postać [0/0].", isCorrect: true }
+        ]
+    },
+    {
+        id: 7,
+        type: "multi",
+        text: "Dla x > 0 i α ∈ R rozważ x^α. Które zdania są prawdziwe?",
+        options: [
+            { text: "(x^α)' = α x^α dla x > 0.", isCorrect: false },
+            { text: "Jeśli α ≠ 1, to (x^α)' = x^{α-1}.", isCorrect: false },
+            { text: "Dla α = 0 mamy x⁰ = 1, więc (x⁰)' = 0.", isCorrect: true },
+            { text: "Wzór (x^α)' = α x^{α-1} jest poprawny dla dowolnych x ∈ R i dowolnych α ∈ R.", isCorrect: false },
+            { text: "Dla α = 1 mamy (x¹)' = (x)' = 1.", isCorrect: true }
+        ]
+    },
+    {
+        id: 8,
+        type: "multi",
+        text: "Które zdania dotyczące warunku koniecznego zbieżności szeregu są prawdziwe?",
+        options: [
+            { text: "Warunek konieczny zbieżności szeregu jest jednocześnie warunkiem wystarczającym.", isCorrect: false },
+            { text: "Jeśli a_n ⟶ 0, to ∑ a_n jest zbieżny.", isCorrect: false },
+            { text: "Granica a_n może być różna od zera dla szeregu zbieżnego.", isCorrect: false },
+            { text: "Jeśli a_n ⇏ 0, to szereg ∑ a_n jest rozbieżny.", isCorrect: true },
+            { text: "Jeśli ∑ a_n jest zbieżny, to a_n ⟶ 0.", isCorrect: true }
+        ]
+    },
+    {
+        id: 9,
+        type: "multi",
+        text: "Niech F będzie funkcją pierwotną f na (a, b), a φ : (α, β) ⟶ (a, b) funkcją różniczkowalną. Które zdania o podstawieniu są prawdziwe?",
+        options: [
+            { text: "∫ (ln x / x) dx = ln x + C dla x > 0.", isCorrect: false },
+            { text: "W przykładzie ∫ (ln x / x) dx, przy założeniu x > 0, podstawienie t = ln x prowadzi do wyniku 1/2(ln x)² + C.", isCorrect: true },
+            { text: "Przy podstawieniu nie jest konieczne, aby funkcja φ była różniczkowalna.", isCorrect: false },
+            { text: "Po wykonaniu podstawienia y = φ(x) zachodzi: ∫ f(φ(x))φ'(x) dx = ∫ f(y) dy.", isCorrect: true },
+            { text: "Funkcją pierwotną f(φ(x))φ'(x) na (α, β) jest funkcja F(φ(x)).", isCorrect: true }
+        ]
+    },
+    {
+        id: 10,
+        type: "multi",
+        text: "Niech x > 0 oraz y, z ∈ R. Które zdania są prawdziwe?",
+        options: [
+            { text: "Jeżeli x > 1 i y < z to x^y < x^z.", isCorrect: true },
+            { text: "Potęga x^y jest (w tej definicji) określona dla x < 0.", isCorrect: false },
+            { text: "Monotoniczność funkcji x^y nie zależy od podstawy x.", isCorrect: false },
+            { text: "Jeżeli 0 < x < 1 i y < z to x^y > x^z.", isCorrect: true },
+            { text: "Dla każdego y zachodzi x^y > 0.", isCorrect: true }
+        ]
+    },
+    {
+        id: 11,
+        type: "multi",
+        text: "Które zdania o równoważności metryk w Rⁿ są prawdziwe?",
+        options: [
+            { text: "W Rⁿ metryki ρ₁, ρ₂, ρ_∞ są równoważne.", isCorrect: true },
+            { text: "Jeśli istnieją α, β > 0 takie, że βρ₁(x, y) ≤ ρ₂(x, y) ≤ αρ₁(x, y), to ρ₁, ρ₂ są równoważne.", isCorrect: true },
+            { text: "Równoważność metryk jest pojęciem tylko dla przestrzeni skończonych.", isCorrect: false },
+            { text: "ρ₁ jest zawsze silniejsza od ρ_∞ bez żadnych stałych.", isCorrect: false },
+            { text: "Z równoważności metryk wynika, że kule w obu metrykach mają zawsze identyczny kształt.", isCorrect: false }
+        ]
+    },
+    {
+        id: 12,
+        type: "multi",
+        text: "Niech a > 1. Dana jest funkcja wykładnicza f(x) = a^x. Które zdania są prawdziwe?",
+        options: [
+            { text: "Równanie a^x = 1 ma dokładnie jedno rozwiązanie.", isCorrect: true },
+            { text: "Dla każdego x ∈ R zachodzi a^x > 0.", isCorrect: true },
+            { text: "Funkcja przyjmuje wartości ujemne.", isCorrect: false },
+            { text: "Funkcja jest różnowartościowa.", isCorrect: true },
+            { text: "Funkcja jest malejąca.", isCorrect: false }
+        ]
+    }
 ];
 
-    let currentQueue = [];
-    let currentItem = null;
-
-    function startSession() {
-        currentQueue = [...allData].sort(() => Math.random() - 0.5);
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('end-screen').style.display = 'none';
-        document.getElementById('study-screen').style.display = 'block';
-        nextCard();
+// Funkcja mieszająca (Fisher-Yates Shuffle)
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+}
 
-    function nextCard() {
-        if (currentQueue.length === 0) {
-            finishSession();
-            return;
-        }
-        currentItem = currentQueue.shift();
-        document.getElementById('count').innerText = currentQueue.length + 1;
-        document.getElementById('question').innerText = currentItem.q;
-        document.getElementById('formula-text').innerText = `\\( ${currentItem.a} \\)`;
-        
-        document.getElementById('formula-container').style.display = 'none';
-        document.getElementById('show-btn').style.display = 'inline-block';
-        document.getElementById('know-btn').style.display = 'none';
-        document.getElementById('dont-know-btn').style.display = 'none';
-        
-        MathJax.typeset();
-    }
+// Renderowanie testu
+function initQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+    
+    // Losowanie kolejności pytań
+    const shuffledData = shuffle([...database]);
 
-    function showFormula() {
-        document.getElementById('formula-container').style.display = 'block';
-        document.getElementById('show-btn').style.display = 'none';
-        document.getElementById('know-btn').style.display = 'inline-block';
-        document.getElementById('dont-know-btn').style.display = 'inline-block';
-    }
+    shuffledData.forEach((q, qIndex) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.dataset.id = q.id;
+        card.dataset.type = q.type;
 
-    function handleAnswer(known) {
-        if (known) {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
+        const badge = document.createElement('div');
+        badge.className = 'type-badge';
+        badge.innerText = q.type === 'multi' ? 'WIELOKROTNY WYBÓR' : 'JEDNOKROTNY WYBÓR';
+        card.appendChild(badge);
+
+        const qText = document.createElement('div');
+        qText.className = 'question-text';
+        qText.innerText = `${qIndex + 1}. ${q.text}`;
+        card.appendChild(qText);
+
+        const optionsList = document.createElement('ul');
+        optionsList.className = 'options-list';
+
+        // Losowanie kolejności odpowiedzi
+        const shuffledOptions = shuffle([...q.options]);
+
+        shuffledOptions.forEach((opt, oIndex) => {
+            const li = document.createElement('li');
+            li.className = 'option-item';
+            
+            const input = document.createElement('input');
+            input.type = q.type === 'multi' ? 'checkbox' : 'radio';
+            input.name = `q-${q.id}`;
+            input.value = opt.text;
+            input.dataset.correct = opt.isCorrect;
+
+            const label = document.createElement('span');
+            label.innerText = opt.text;
+
+            li.appendChild(input);
+            li.appendChild(label);
+            
+            // Kliknięcie w dowolne miejsce na pasku zaznacza input
+            li.addEventListener('click', (e) => {
+                if(e.target !== input) {
+                    input.checked = !input.checked;
+                }
             });
-            nextCard();
-        } else {
-            const explosion = document.getElementById('explosion');
-            const card = document.getElementById('flashcard');
-            
-            explosion.style.display = 'block';
-            card.classList.add('shake');
-            
-            setTimeout(() => {
-                explosion.style.display = 'none';
-                card.classList.remove('shake');
-                currentQueue.push(currentItem); 
-                nextCard();
-            }, 400);
-        }
-    }
 
-    function finishSession() {
-        document.getElementById('study-screen').style.display = 'none';
-        document.getElementById('end-screen').style.display = 'block';
-        confetti({
-            particleCount: 200,
-            spread: 120,
-            origin: { y: 0.5 }
+            optionsList.appendChild(li);
         });
+
+        card.appendChild(optionsList);
+        container.appendChild(card);
+    });
+}
+
+// Sprawdzanie odpowiedzi
+function checkAnswers() {
+    const cards = document.querySelectorAll('.question-card');
+    let totalQuestions = cards.length;
+    let correctQuestionsCount = 0;
+
+    cards.forEach(card => {
+        const inputs = card.querySelectorAll('input');
+        let isQuestionPerfect = true;
+
+        inputs.forEach(input => {
+            const item = input.closest('.option-item');
+            const isCorrectAnswer = input.dataset.correct === 'true';
+            const isChecked = input.checked;
+
+            // Reset stylów
+            item.className = 'option-item';
+
+            if (isChecked && isCorrectAnswer) {
+                item.classList.add('correct'); // Dobrze zaznaczone
+            } else if (isChecked && !isCorrectAnswer) {
+                item.classList.add('incorrect'); // Źle zaznaczone
+                isQuestionPerfect = false;
+            } else if (!isChecked && isCorrectAnswer) {
+                item.classList.add('missing'); // Powinno być zaznaczone, a nie jest
+                isQuestionPerfect = false;
+            }
+        });
+
+        if (isQuestionPerfect) {
+            correctQuestionsCount++;
+        }
+    });
+
+    // Wyświetlenie wyniku ogólnego
+    const resultBox = document.getElementById('result');
+    resultBox.style.display = 'block';
+    resultBox.innerText = `Twój wynik: ${correctQuestionsCount} / ${totalQuestions} (${Math.round((correctQuestionsCount/totalQuestions)*100)}%)`;
+    
+    if(correctQuestionsCount === totalQuestions) {
+        resultBox.style.background = '#d4edda';
+        resultBox.style.color = '#155724';
+    } else {
+        resultBox.style.background = '#fff3cd';
+        resultBox.style.color = '#856404';
     }
+    
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+// Uruchomienie przy załadowaniu strony
+window.onload = initQuiz;
 </script>
 
 </body>
