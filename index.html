@@ -535,10 +535,10 @@ function generateFormulasPewniak() {
 // Dynamiczny generator pytania o granicę
 function generateDynamicLimitQuestion() {
     const signs = [
-        { lSign: '+', mSign: '+', ansStr: "5/3" },
-        { lSign: '-', mSign: '+', ansStr: "-5/3" },
-        { lSign: '+', mSign: '-', ansStr: "-5/3" },
-        { lSign: '-', mSign: '-', ansStr: "5/3" }
+        { lSign: '+', mSign: '+', ansStr: "5" },
+        { lSign: '-', mSign: '+', ansStr: "-5" },
+        { lSign: '+', mSign: '-', ansStr: "-5" },
+        { lSign: '-', mSign: '-', ansStr: "5" }
     ];
     const chosen = signs[Math.floor(Math.random() * signs.length)];
     
