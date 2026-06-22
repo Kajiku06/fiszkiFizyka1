@@ -3,59 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egzamin Krok po Kroku - Pełna Baza 15 Pytan</title>
+    <title>Egzamin: Matematyka 2</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f3f6;
+            color: #2c3e50;
             margin: 0;
             padding: 20px;
         }
         .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 750px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
         h1 {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #ecf0f1;
+            color: #1a2a3a;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f1f2f6;
             padding-bottom: 15px;
-            font-size: 1.6em;
         }
         .progress-bar {
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: #7f8c8d;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: right;
+            font-weight: 500;
         }
         .question-card {
-            background: #fafbfc;
-            border: 1px solid #e1e8ed;
-            border-radius: 6px;
-            padding: 20px;
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 25px;
             margin-bottom: 25px;
-        }
-        .question-text {
-            font-weight: 600;
-            font-size: 1.15em;
-            color: #2c3e50;
-            margin-bottom: 15px;
         }
         .type-badge {
             display: inline-block;
             font-size: 0.75em;
-            padding: 3px 8px;
+            padding: 4px 10px;
             background: #e1f5fe;
             color: #0288d1;
-            border-radius: 3px;
-            margin-bottom: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2em;
+            color: #1e293b;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .math-expr {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #0f172a;
             font-weight: bold;
         }
         .options-list {
@@ -65,84 +75,98 @@
         }
         .option-item {
             display: flex;
-            align-items: flex-start;
-            padding: 12px;
-            margin-bottom: 8px;
-            background: #fff;
-            border: 1px solid #d1d8e0;
-            border-radius: 4px;
+            align-items: center;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
         .option-item:hover {
-            background: #f1f2f6;
+            background: #f8fafc;
+            border-color: #94a3b8;
         }
         .option-item input {
-            margin-right: 12px;
-            margin-top: 4px;
-            transform: scale(1.2);
+            margin-right: 15px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        .option-text {
+            font-size: 1.05em;
+            color: #334155;
+            line-height: 1.4;
         }
         .action-btn {
             display: block;
             width: 100%;
-            padding: 15px;
-            color: white;
+            padding: 16px;
+            color: #ffffff;
             border: none;
             border-radius: 6px;
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         .btn-check {
-            background: #2ed573;
+            background: #10b981;
         }
         .btn-check:hover {
-            background: #26af5f;
+            background: #059669;
         }
         .btn-next {
-            background: #3498db;
-            display: none;
+            background: #3b82f6 !important;
         }
         .btn-next:hover {
-            background: #2980b9;
+            background: #2563eb !important;
         }
         .correct {
-            background: #d4edda !important;
-            border-color: #c3e6cb !important;
-            color: #155724;
+            background: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+            color: #065f46;
         }
         .incorrect {
-            background: #f8d7da !important;
-            border-color: #f5c6cb !important;
-            color: #721c24;
+            background: #fef2f2 !important;
+            border-color: #fecaca !important;
+            color: #991b1b;
         }
         .missing {
-            border: 2px dashed #ffc107 !important;
-            background: #fff3cd !important;
+            border: 2px dashed #f59e0b !important;
+            background: #fffbeb !important;
+            color: #92400e;
         }
         .score-summary {
             text-align: center;
             font-size: 1.4em;
             font-weight: bold;
-            color: #2c3e50;
+            color: #1e293b;
+            padding: 20px 0;
         }
         .btn-restart {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #2c3e50;
+            margin-top: 25px;
+            padding: 12px 28px;
+            background: #475569;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-restart:hover {
+            background: #334155;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Egzamin: Matematyka 2 (Pełna Baza 15 Pytań)</h1>
+    <h1>Egzamin Teoretyczny: Matematyka 2</h1>
     <div id="progress" class="progress-bar"></div>
     <div id="quiz-area"></div>
     
@@ -207,7 +231,7 @@ const database = [
             { text: "lim b_n = 3", isCorrect: false },
             { text: "lim b_n = √3", isCorrect: false },
             { text: "Ciąg jest rozbieżny", isCorrect: false },
-            { text: "lim b_n = 5/3 (Uwaga: Błąd w oryginalnym teście WAT - matematyczny wynik to 5)", isCorrect: true }
+            { text: "lim b_n = 5/3 (Błąd w oryginalnym teście - wynik poprawny matematycznie to 5)", isCorrect: true }
         ]
     },
     {
@@ -345,6 +369,11 @@ function shuffle(array) {
     return array;
 }
 
+// Funkcja formatująca symbole matematyczne w locie dla lepszej czytelności wizualnej
+function formatMathSymbols(text) {
+    return text.replace(/(lim a_n|lim \|a_n\||f : A ⟶ R|f⁻¹\(U\)|U ⊂ R|lim_{x ⟶ x_0}|f\(x\) = f\(x_0\)|\|a_n\| ≤ b_n|∑ b_n|∑ a_n|b_n =.*?n|lim b_n = \d\/\d|lim b_n = \d|lim b_n = √\d|g'\(x\) ≠ 0|lim f\/g = lim f'\/g'|lim_{x ⟶ a⁺}|f'\(x\)\/g'\(x\) = K|f\(x\)\/g\(x\) = K|x\^α|α ∈ R|\(x\^α\)'|x\^{α-1}|x⁰ = 1|\(x⁰\)' = 0|\(x¹\)'|a_n ⟶ 0|a_n ⇏ 0|∫ \(ln x \/ x\) dx|t = ln x|1\/2\(ln x\)\² \+ C|y = φ\(x\)|∫ f\(φ\(x\)\)φ'\(x\) dx = ∫ f\(y\) dy|F\(φ\(x\)\)|x > 0|y, z ∈ R|x\^y < x\^z|0 < x < 1|x\^y > x\^z|Rⁿ|ρ₁, ρ₂, ρ_∞|βρ₁\(x, y\) ≤ ρ₂\(x, y\) ≤ αρ₁\(x, y\)|a > 1|f\(x\) = a\^x|a\^x = 1|f'\(x\) ≥ 0|f'\(x\) < 0|f'\(x\) = 0|f'\(x\) > 0|a_n ≤ a_{n\+1}|a_n < a_{n\+1}|lim \(a_{n\+1} \/ a_n\))/g, '<span class="math-expr">$1</span>');
+}
+
 function startQuiz() {
     shuffledQuestions = shuffle([...database]);
     currentQuestionIndex = 0;
@@ -377,7 +406,7 @@ function showQuestion() {
 
     const qText = document.createElement('div');
     qText.className = 'question-text';
-    qText.innerText = q.text;
+    qText.innerHTML = formatMathSymbols(q.text);
     card.appendChild(qText);
 
     const optionsList = document.createElement('ul');
@@ -396,7 +425,8 @@ function showQuestion() {
         input.dataset.correct = opt.isCorrect;
 
         const label = document.createElement('span');
-        label.innerText = opt.text;
+        label.className = 'option-text';
+        label.innerHTML = formatMathSymbols(opt.text);
 
         li.appendChild(input);
         li.appendChild(label);
@@ -434,7 +464,7 @@ function checkCurrentAnswer() {
 
     inputs.forEach(i => { if(i.checked) anyChecked = true; });
     if(!anyChecked) {
-        alert("Zaznacz co najmniej jedną odpowiedź!");
+        alert("Zaznacz co najmniej jedną odpowiedź przed sprawdzeniem!");
         return;
     }
 
@@ -483,10 +513,10 @@ function showFinalResult() {
 
     quizArea.innerHTML = `
         <div class="score-summary">
-            Koniec testu!<br>
-            Twój ostateczny wynik to:<br>
-            <strong>${userScore} / ${shuffledQuestions.length} (${Math.round((userScore/shuffledQuestions.length)*100)}%)</strong><br>
-            <button class="btn-restart" onclick="location.reload()">Rozpocznij od nowa</button>
+            Test zakończony!<br><br>
+            Twój końcowy wynik:<br>
+            <span style="font-size: 1.4em; color: #2563eb;">${userScore} / ${shuffledQuestions.length} (${Math.round((userScore/shuffledQuestions.length)*100)}%)</span><br>
+            <button class="btn-restart" onclick="location.reload()">Podejdź jeszcze raz</button>
         </div>
     `;
 }
